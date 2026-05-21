@@ -4,10 +4,87 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum PlanType {
+  FREE
+  PRO
+}
+
+enum UploadStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id                   String     @id @default(uuid()) @db.Uuid
+  email                String     @unique
+  clerkId              String     @unique @map("clerk_id")
+  stripeCustomerId     String?    @unique @map("stripe_customer_id")
+  stripeSubscriptionId String?    @unique @map("stripe_subscription_id")
+  planType             PlanType   @default(FREE) @map("plan_type")
+  creditsRemaining     Int        @default(2) @map("credits_remaining")
+  createdAt            DateTime   @default(now()) @map("created_at")
+  updatedAt            DateTime   @updatedAt @map("updated_at")
+  
+  uploads              Upload[]
+  schedules            Schedule[]
+
+  @@map("users")
+}
+
+model Upload {
+  id           String       @id @default(uuid()) @db.Uuid
+  userId       String       @map("user_id") @db.Uuid
+  fileUrl      String       @map("file_url")
+  fileHash     String       @map("file_hash")
+  status       UploadStatus @default(PENDING)
+  errorMessage String?      @map("error_message")
+  uploadedAt   DateTime     @default(now()) @map("uploaded_at")
+
+  user         User         @relation(fields: [userId], references: [id])
+  schedule     Schedule?
+
+  @@index([userId])
+  @@index([fileHash]) // Fast lookup for idempotency/cloning
+  @@map("uploads")
+}
+
+model Schedule {
+  id          String      @id @default(uuid()) @db.Uuid
+  userId      String      @map("user_id") @db.Uuid
+  uploadId    String      @unique @map("upload_id") @db.Uuid
+  title       String
+  examDate    DateTime    @db.Date @map("exam_date")
+  isActive    Boolean     @default(true) @map("is_active")
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  user        User        @relation(fields: [userId], references: [id])
+  upload      Upload      @relation(fields: [uploadId], references: [id])
+  tasks       StudyTask[]
+
+  @@index([userId])
+  @@map("schedules")
+}
+
+model StudyTask {
+  id               String   @id @default(uuid()) @db.Uuid
+  scheduleId       String   @map("schedule_id") @db.Uuid
+  topicName        String   @map("topic_name")
+  assignedDate     DateTime @db.Date @map("assigned_date")
+  orderIndex       Int      @map("order_index")
+  estimatedMinutes Int      @map("estimated_minutes")
+  isCompleted      Boolean  @default(false) @map("is_completed")
+
+  schedule         Schedule @relation(fields: [scheduleId], references: [id])
+
+  @@index([scheduleId, assignedDate]) // Composite index for fast chronological fetching
+  @@map("study_tasks")
 }
