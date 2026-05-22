@@ -24,3 +24,71 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* CLERK NUCLEAR DARK MODE OVERRIDE V2 */
+
+/* 1. Nuke ALL hardcoded backgrounds inside the footer */
+.cl-footer, 
+.cl-footer * {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* 2. Set the exact dark background for the main containers */
+.cl-card, 
+.cl-rootBox {
+  background-color: #111827 !important; /* Tailwind gray-900 */
+  border: 1px solid #1f2937 !important; /* Tailwind gray-800 */
+}
+
+/* 3. Force ALL typography inside the card to be light */
+.cl-card p, 
+.cl-card span, 
+.cl-card h1, 
+.cl-card label,
+.cl-card div {
+  color: #f3f4f6 !important; /* Tailwind gray-100 */
+}
+
+/* 4. Style Inputs and Social Buttons */
+.cl-socialButtonsBlockButton,
+.cl-formFieldInput {
+  background-color: #1f2937 !important; /* Tailwind gray-800 */
+  border: 1px solid #374151 !important; /* Tailwind gray-700 */
+  color: #ffffff !important;
+}
+
+/* 5. Maintain the Brand Color for the Primary Submit Button */
+.cl-formButtonPrimary {
+  background-color: #4f46e5 !important; /* Tailwind Indigo-600 */
+  color: #ffffff !important;
+}
+.cl-formButtonPrimary:hover {
+  background-color: #4338ca !important; /* Tailwind Indigo-700 hover */
+}
+
+/* 6. Highlight the "Sign In / Sign Up" text links */
+.cl-footerActionLink {
+  color: #818cf8 !important; /* Tailwind Indigo-400 */
+  font-weight: 600 !important;
+}
+
+/* 7. Fix Input Placeholders */
+.cl-formFieldInput::placeholder {
+  color: #9ca3af !important; /* Tailwind gray-400 */
+  opacity: 1 !important; /* Forces browsers to respect the color */
+}
+
+/* 8. Fix Footer Text ("Don't have an account?") */
+.cl-footerActionText {
+  color: #d1d5db !important; /* Tailwind gray-300 */
+}
+
+/* 9. Fix "Secured by" Text and the Clerk Logo SVG */
+.cl-internal-1scq7x4, /* "Secured by" text */
+.cl-internal-5ghyhf,  /* The Clerk Logo SVG */
+.cl-internal-1fpq5at  /* "Development mode" text */
+{
+  color: #9ca3af !important; /* Tailwind gray-400 */
+}

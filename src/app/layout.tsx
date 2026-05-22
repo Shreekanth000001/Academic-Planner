@@ -7,9 +7,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider
       appearance={{
         baseTheme: dark,
-        variables: {
-          colorPrimary: "#4f46e5", // We only override the primary brand color
-        }
       }}
     >
       <html lang="en" className="dark">
