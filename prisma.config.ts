@@ -9,7 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // PRIORITY: Use direct connection (5432) for DDL migrations.
+    // Fallback to DATABASE_URL only if DIRECT_URL is missing.
+    url: process.env["DIRECT_URL"] ?? process.env["DATABASE_URL"] ?? "",
   },
 });
-
