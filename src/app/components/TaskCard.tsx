@@ -1,34 +1,43 @@
-interface TaskProps {
-    id: number,
-    title: string,
-    status: string,
-    exam_date: string
+// Updated to match the SQLAlchemy Schedule model you provided
+export interface ScheduleProps {
+  id: string;
+  title: string;
+  exam_date: string;
+  is_active: boolean;
+  created_at: string;
 }
 
-export default function TaskCard({ id, title, status, exam_date }: TaskProps) {
-    return (
+export default function TaskCard({ id, title, exam_date, is_active, created_at }: ScheduleProps) {
+  // Format dates for cleaner UI
+  const formattedExamDate = new Date(exam_date).toLocaleDateString();
+  const formattedCreatedDate = new Date(created_at).toLocaleDateString();
 
-        
-        <tbody>
-            <tr className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
-                <th scope="row" className="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                    {id}
-                </th>
-                <td className="px-6 py-4">
-                    {title}
-                </td>
-                <td className="px-6 py-4">
-                    {status}
-                </td>
-                <td className={`px-6 py-4 w-48 rounded-2xl ${status == "completed" ? 'bg-green-400' : 'bg-red-400'}`}>
-                    {exam_date}
-                </td>
-                <td className="px-6 py-4">
-                    <a href="#" className="font-medium text-fg-brand hover:underline">Edit</a>
-                </td>
-            </tr>
-        </tbody>
-
-    );
+  return (
+    <tr className="border-b border-gray-800 hover:bg-gray-800/50 transition-colors">
+      <td className="px-6 py-4 font-mono text-xs text-gray-400 whitespace-nowrap">
+        {id.split('-')[0]} {/* Show just the first part of UUID for clean UI */}
+      </td>
+      <td className="px-6 py-4 font-medium text-gray-200">
+        {title}
+      </td>
+      <td className="px-6 py-4 text-gray-400 text-sm">
+        {formattedCreatedDate}
+      </td>
+      <td className="px-6 py-4">
+        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+          is_active ? 'bg-indigo-500/20 text-indigo-400' : 'bg-gray-700 text-gray-300'
+        }`}>
+          {is_active ? 'Active' : 'Archived'}
+        </span>
+      </td>
+      <td className="px-6 py-4 text-sm text-gray-300">
+        {formattedExamDate}
+      </td>
+      <td className="px-6 py-4 text-right">
+        <button className="font-medium text-indigo-400 hover:text-indigo-300 hover:underline transition-colors">
+          View Tasks
+        </button>
+      </td>
+    </tr>
+  );
 }
-
