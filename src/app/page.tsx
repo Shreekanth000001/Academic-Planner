@@ -1,11 +1,9 @@
-import TaskCard from '@/app/TaskCard'
+import TaskCard from '@/app/components/TaskCard'
 
-export default function Home() {
-  const mockData = [
-    { id: 1, subject: "Database Management", chapter: "CAP Theorem", status: "pending" },
-    { id: 2, subject: "Operating System", chapter: "Intro To Processes", status: "completed" },
-    { id: 3, subject: "Computer Networks", chapter: "Security", status: "pending" }
-  ]
+export default async function Home() {
+  const response = await fetch("http:localhost:8000/schedules")
+  const mockData = await response.json()
+  console.log(mockData )
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black text-black dark:text-white">
@@ -17,11 +15,11 @@ export default function Home() {
 
         <div className="flex flex-col w-full justify-between mt-10">
           {
-            mockData.map((data) => {
+            mockData.map((data : any) => {
               return <TaskCard key={data.id}
-                subject={data.subject}
-                chapter={data.chapter}
-                status={data.status}
+                subject={data.title}
+                chapter={String(data.is_active)}
+                status={data.exam_date}
               />
             })
           }
