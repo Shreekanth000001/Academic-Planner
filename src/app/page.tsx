@@ -1,17 +1,18 @@
 import TaskCard, { ScheduleProps } from '@/app/components/TaskCard';
 import UploadForm from '@/app/components/UploadForm';
 
-// Server component to fetch directly from FastAPI
 async function getSchedules(): Promise<ScheduleProps[]> {
   try {
-    // cache: 'no-store' ensures Next.js doesn't permanently cache this request, 
-    // so new uploads show up when the page is refreshed.
-    const res = await fetch('http://127.0.0.1:8000/schedules', { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to fetch data');
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching schedules:", error);
-    return []; // Return empty array on failure so page still loads
+    const res = await fetch("http://localhost:3000/schedules", { cache: 'no-store' })
+    if (!res) 
+      { throw new Error("Bad response from backend") }
+
+    return res.json()
+  }
+
+  catch (e) {
+    console.log(e)
+    throw new Error("Unable to get schedule")
   }
 }
 
@@ -20,7 +21,7 @@ export default async function Home() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
-      
+
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-800 pb-6">
         <div>
@@ -30,7 +31,7 @@ export default async function Home() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+
         {/* Left Column: Upload Form */}
         <div className="lg:col-span-1">
           <UploadForm />
@@ -45,7 +46,7 @@ export default async function Home() {
                 {schedules.length} Total
               </span>
             </div>
-            
+
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead className="bg-gray-950 text-xs uppercase text-gray-400 border-b border-gray-800">
@@ -61,7 +62,7 @@ export default async function Home() {
                 <tbody className="divide-y divide-gray-800/50">
                   {schedules.length > 0 ? (
                     schedules.map((schedule) => (
-                      <TaskCard 
+                      <TaskCard
                         key={schedule.id}
                         id={schedule.id}
                         title={schedule.title}
@@ -82,7 +83,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
-        
+
       </div>
     </div>
   );

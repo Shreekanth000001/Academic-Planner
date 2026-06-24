@@ -1,21 +1,18 @@
-// Updated to match the SQLAlchemy Schedule model you provided
-export interface ScheduleProps {
-  id: string;
-  title: string;
-  exam_date: string;
-  is_active: boolean;
-  created_at: string;
+export interface ScheduleProps{
+  id:string;
+  title:string;
+  exam_date:string;
+  is_active:string;
+  created_at:string;
 }
 
-export default function TaskCard({ id, title, exam_date, is_active, created_at }: ScheduleProps) {
-  // Format dates for cleaner UI
-  const formattedExamDate = new Date(exam_date).toLocaleDateString();
-  const formattedCreatedDate = new Date(created_at).toLocaleDateString();
-
+export default function TaskCard({id,title,exam_date,is_active,created_at} : ScheduleProps){
+  const formattedExamDate = new Date(exam_date).toLocaleDateString()
+  const formattedCreatedDate = new Date(created_at).toLocaleDateString()
   return (
     <tr className="border-b border-gray-800 hover:bg-gray-800/50 transition-colors">
       <td className="px-6 py-4 font-mono text-xs text-gray-400 whitespace-nowrap">
-        {id.split('-')[0]} {/* Show just the first part of UUID for clean UI */}
+        {id.split('-')[0]}
       </td>
       <td className="px-6 py-4 font-medium text-gray-200">
         {title}
@@ -39,5 +36,5 @@ export default function TaskCard({ id, title, exam_date, is_active, created_at }
         </button>
       </td>
     </tr>
-  );
+  )
 }
