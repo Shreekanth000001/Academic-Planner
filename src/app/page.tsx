@@ -3,8 +3,8 @@ import UploadForm from '@/app/components/UploadForm';
 
 async function getSchedules(): Promise<ScheduleProps[]> {
   try {
-    const res = await fetch("http://localhost:3000/schedules", { cache: 'no-store' })
-    if (!res) 
+    const res = await fetch("http://localhost:8000/schedules", { cache: 'no-store' })
+    if (!res.ok) 
       { throw new Error("Bad response from backend") }
 
     return res.json()
