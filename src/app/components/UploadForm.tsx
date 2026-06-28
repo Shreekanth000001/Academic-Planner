@@ -1,94 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
+
+interface UploadResponse {
+  message: string;
+}
 
 export default function UploadForm() {
-  const [file, setFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
-  const [message, setMessage] = useState<string>("");
+  const [uploading, setUploading] = useState<boolean>(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-      setStatus("idle");
-      setMessage("");
+  const handleFormAction = async (formData: FormData) => {
+    const file = formData.get("file") as File | null;
+
+    if (!file || file.size === 0) {
+      alert("No file selected.");
+      return;
     }
-  };
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!file) return;
+    if (file.type !== "application/pdf") {
+      alert("File type should be PDF.");
+      return;
+    }
 
-    setStatus("uploading");
-    const formData = new FormData();
-    formData.append("file", file);
+    setUploading(true);
 
     try {
-      // Note: Using the exact spelling from your FastAPI route: /uploads/syllabys
       const response = await fetch("http://127.0.0.1:8000/uploads/syllabys", {
         method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error("Failed to upload syllabus");
+        alert("Internal server processing error.");
+        return;
       }
 
-      setStatus("success");
-      setMessage("Syllabus uploaded and queued for processing!");
-      setFile(null); // Reset form
-      
-      // Optional: Force a hard refresh of the page to show the new schedule once processed
-      // setTimeout(() => window.location.reload(), 2000);
-
+      const data: UploadResponse = await response.json();
+      console.log("Ingestion successful:", data);
     } catch (error) {
-      console.error(error);
-      setStatus("error");
-      setMessage("An error occurred during upload.");
+      console.error("Network fault:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-white mb-4">Upload New Syllabus</h2>
-      
-      <form onSubmit={handleUpload} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Select PDF Syllabus
-          </label>
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
-            className="block w-full text-sm text-gray-400
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-md file:border-0
-              file:text-sm file:font-semibold
-              file:bg-indigo-600 file:text-white
-              hover:file:bg-indigo-700
-              focus:outline-none transition-colors"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={!file || status === "uploading"}
-          className={`w-full py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-            !file || status === "uploading"
-              ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-              : "bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm"
-          }`}
+    <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg max-w-sm">
+      {/* React 19 forms accept functions directly inside action attributes */}
+      <form action={handleFormAction} className="flex flex-col gap-3">
+        <input 
+          type="file" 
+          name="file" 
+          accept="application/pdf" 
+          className="text-slate-300 file:bg-slate-800 file:text-white file:border-0 file:rounded file:px-2 file:py-1 file:mr-2"
+        />
+        <button 
+          type="submit" 
+          disabled={uploading}
+          className="px-4 py-2 bg-indigo-600 rounded text-white disabled:bg-slate-700 transition"
         >
-          {status === "uploading" ? "Uploading & Processing..." : "Upload & Generate Plan"}
+          {uploading ? "Ingesting System Config..." : "Upload Syllabus"}
         </button>
-
-        {status === "success" && (
-          <p className="text-sm text-green-400 mt-2">{message}</p>
-        )}
-        {status === "error" && (
-          <p className="text-sm text-red-400 mt-2">{message}</p>
-        )}
       </form>
     </div>
   );
