@@ -1,6 +1,3 @@
-// src/components/TaskView.tsx (or wherever you place your components)
-import React from 'react';
-
 export interface StudyTaskPayload {
   id: string;
   schedule_id: string;
@@ -12,7 +9,6 @@ export interface StudyTaskPayload {
 
 async function get_tasks(): Promise<StudyTaskPayload[]> {
   try {
-    // Adding no-store to prevent stale builds during live testing
     const response = await fetch("http://localhost:8000/viewtask", { cache: 'no-store' });
     if (!response.ok) {
       throw new Error("Failed to fetch tasks from backend");
@@ -39,7 +35,6 @@ export default async function TaskView() {
       <div className="space-y-3">
         {tasks.length > 0 ? (
           tasks.map((task: StudyTaskPayload) => {
-            // Calculate runtime execution logs per element block inside mapping closure
             const hours = Math.floor(task.estimated_minutes / 60);
             const minutes = task.estimated_minutes % 60;
             const executionTimeStr = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
