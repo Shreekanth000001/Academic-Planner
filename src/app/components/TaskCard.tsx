@@ -1,12 +1,22 @@
+"use client"
+import { useRouter } from "next/navigation";
+
 export interface ScheduleProps{
   id:string;
   title:string;
   exam_date:string;
-  is_active:string;
+  is_active:boolean;
   created_at:string;
 }
 
 export default function TaskCard({id,title,exam_date,is_active,created_at} : ScheduleProps){
+
+  const Router = useRouter()
+
+  const handleRouting = () => {
+    Router.push(`/viewtask/${id}`)
+  }
+
   const formattedExamDate = new Date(exam_date).toLocaleDateString()
   const formattedCreatedDate = new Date(created_at).toLocaleDateString()
   return (
@@ -31,7 +41,7 @@ export default function TaskCard({id,title,exam_date,is_active,created_at} : Sch
         {formattedExamDate}
       </td>
       <td className="px-6 py-4 text-right">
-        <button className="font-medium text-indigo-400 hover:text-indigo-300 hover:underline transition-colors">
+        <button onClick={handleRouting} className="font-medium text-indigo-400 hover:text-indigo-300 hover:underline transition-colors">
           View Tasks
         </button>
       </td>

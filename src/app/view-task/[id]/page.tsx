@@ -7,6 +7,12 @@ export interface StudyTaskPayload {
   estimated_minutes: number;
 }
 
+interface PageProps{
+  params: Promise<{
+    id: string;
+  }>
+}
+
 async function get_tasks(): Promise<StudyTaskPayload[]> {
   try {
     const response = await fetch("http://localhost:8000/viewtask", { cache: 'no-store' });
@@ -20,7 +26,7 @@ async function get_tasks(): Promise<StudyTaskPayload[]> {
   }
 }
 
-export default async function TaskView() {
+export default async function TaskView( {params} : PageProps) {
   const tasks = await get_tasks();
 
   return (
