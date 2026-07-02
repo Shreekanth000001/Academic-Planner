@@ -14,7 +14,7 @@ export default function TaskCard({id,title,exam_date,is_active,created_at} : Sch
   const Router = useRouter()
 
   const handleRouting = () => {
-    Router.push(`/viewtask/${id}`)
+    Router.push(`/view-task/${id}`)
   }
 
   const formattedExamDate = new Date(exam_date).toLocaleDateString()
