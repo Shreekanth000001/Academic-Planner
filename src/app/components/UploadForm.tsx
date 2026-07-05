@@ -1,12 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 interface UploadResponse {
   message: string;
 }
 
-export default function UploadForm() {
+export default async function UploadForm() {
+  const { getToken } = useAuth();
+  const token = await getToken();
+
   const [uploading, setUploading] = useState<boolean>(false);
 
   const handleFormAction = async (formData: FormData) => {
@@ -28,6 +32,9 @@ export default function UploadForm() {
       const response = await fetch("http://127.0.0.1:8000/uploads/syllabys", {
         method: "POST",
         body: formData,
+        headers: {
+    Authorization: `Bearer ${token}`, 
+  },
       });
 
       if (!response.ok) {
