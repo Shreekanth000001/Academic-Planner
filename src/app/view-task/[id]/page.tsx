@@ -7,15 +7,15 @@ export interface StudyTaskPayload {
   estimated_minutes: number;
 }
 
-interface PageProps{
+interface PageProps {
   params: Promise<{
     id: string;
   }>
 }
 
-async function get_tasks(): Promise<StudyTaskPayload[]> {
+async function get_tasks(schedule_id: string): Promise<StudyTaskPayload[]> {
   try {
-    const response = await fetch("http://localhost:8000/viewtask", { cache: 'no-store' });
+    const response = await fetch(`http://localhost:8000/viewtask?schedule_id=${schedule_id}`, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error("Failed to fetch tasks from backend");
     }
@@ -26,8 +26,11 @@ async function get_tasks(): Promise<StudyTaskPayload[]> {
   }
 }
 
-export default async function TaskView( {params} : PageProps) {
-  const tasks = await get_tasks();
+export default async function TaskView({ params }: PageProps) {
+
+  const resolved_params = await params;
+  const schedule_id = resolved_params.id;
+  const tasks = await get_tasks(schedule_id);
 
   return (
     <div className="max-w-4xl mx-auto space-y-4 p-4">
@@ -47,8 +50,8 @@ export default async function TaskView( {params} : PageProps) {
             const formattedDate = new Date(task.assigned_date).toLocaleDateString();
 
             return (
-              <div 
-                key={task.id} 
+              <div
+                key={task.id}
                 className="flex items-center justify-between p-4 border border-gray-800 rounded-xl bg-gray-900 shadow-sm hover:border-indigo-500/50 transition-colors"
               >
                 <div className="flex flex-col gap-2">
@@ -62,7 +65,7 @@ export default async function TaskView( {params} : PageProps) {
                     Scheduled: {formattedDate}
                   </p>
                 </div>
-                
+
                 <div className="text-right">
                   <span className="inline-block text-xs font-semibold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full">
                     {executionTimeStr}
