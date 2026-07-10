@@ -1,9 +1,24 @@
 import TaskCard, { ScheduleProps } from '@/app/components/TaskCard';
 import UploadForm from '@/app/components/UploadForm';
 
+import { auth } from "@clerk/nextjs/server";
+
 async function getSchedules(): Promise<ScheduleProps[]> {
   try {
-    const res = await fetch("http://localhost:8000/schedules", { cache: 'no-store' })
+    const { getToken } = await auth();
+    const token = await getToken();
+
+    if (!token) {
+      throw new Error("No token found. User is not authenticated.");
+    }
+
+    const res = await fetch("http://localhost:8000/schedules", 
+      { cache: 'no-store',
+        headers:{
+          Authorization : `Bearer ${token}`
+        }
+       });
+       
     if (!res.ok) 
       { throw new Error("Bad response from backend") }
 
