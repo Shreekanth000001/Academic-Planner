@@ -1,3 +1,5 @@
+import { auth } from "@clerk/nextjs/server";
+
 export interface StudyTaskPayload {
   id: string;
   schedule_id: string;
@@ -15,7 +17,16 @@ interface PageProps {
 
 async function get_tasks(schedule_id: string): Promise<StudyTaskPayload[]> {
   try {
-    const response = await fetch(`http://localhost:8000/viewtask?schedule_id=${schedule_id}`, { cache: 'no-store' });
+     const { getToken } = await auth();
+    const token = await getToken();
+    
+    const response = await fetch(`http://localhost:8000/viewtask?schedule_id=${schedule_id}`, { 
+      cache: 'no-store' ,
+      headers:{
+        Authorization : `Bearer ${token}`
+      }
+
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch tasks from backend");
     }
