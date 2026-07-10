@@ -18,7 +18,7 @@ async function getSchedules(): Promise<ScheduleProps[]> {
           Authorization : `Bearer ${token}`
         }
        });
-       
+
     if (!res.ok) 
       { throw new Error("Bad response from backend") }
 
@@ -27,7 +27,7 @@ async function getSchedules(): Promise<ScheduleProps[]> {
 
   catch (e) {
     console.log(e)
-    throw new Error("Unable to get schedule")
+    return []
   }
 }
 
