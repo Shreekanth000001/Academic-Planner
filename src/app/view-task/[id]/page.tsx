@@ -1,6 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 
-export interface StudyTaskPayload {
+import ChatBox from "@/app/components/ChatBox"
+
+export interface StudyTask {
   id: string;
   schedule_id: string;
   topic_name: string;
@@ -9,13 +11,19 @@ export interface StudyTaskPayload {
   estimated_minutes: number;
 }
 
+
+export interface ViewTaskResponse {
+  upload_id: string;
+  tasks: StudyTask[]; 
+}
+
 interface PageProps {
   params: Promise<{
     id: string;
   }>
 }
 
-async function get_tasks(schedule_id: string): Promise<StudyTaskPayload[]> {
+async function get_tasks(schedule_id: string): Promise<ViewTaskResponse> {
   try {
      const { getToken } = await auth();
     const token = await getToken();
@@ -41,7 +49,7 @@ export default async function TaskView({ params }: PageProps) {
 
   const resolved_params = await params;
   const schedule_id = resolved_params.id;
-  const tasks = await get_tasks(schedule_id);
+  const { upload_id, tasks }  = await get_tasks(schedule_id);
 
   return (
     <div className="max-w-4xl mx-auto space-y-4 p-4">
@@ -54,7 +62,7 @@ export default async function TaskView({ params }: PageProps) {
 
       <div className="space-y-3">
         {tasks.length > 0 ? (
-          tasks.map((task: StudyTaskPayload) => {
+          tasks.map((task: StudyTask) => {
             const hours = Math.floor(task.estimated_minutes / 60);
             const minutes = task.estimated_minutes % 60;
             const executionTimeStr = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
@@ -82,6 +90,7 @@ export default async function TaskView({ params }: PageProps) {
                     {executionTimeStr}
                   </span>
                 </div>
+                
               </div>
             );
           })
@@ -91,6 +100,7 @@ export default async function TaskView({ params }: PageProps) {
           </div>
         )}
       </div>
+      <ChatBox uploadId={upload_id}/>
     </div>
   );
 }
