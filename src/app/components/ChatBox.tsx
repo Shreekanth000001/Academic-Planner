@@ -1,23 +1,20 @@
-"use client"; // Strict Boundary: This requires browser interactivity (State, Forms)
+"use client";
 
 import React, { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
-// 1. Strict TypeScript for our UI State
 interface Message {
   role: "user" | "ai";
   content: string;
 }
 
-// 2. Component Props: The Chat needs to know WHICH document it is talking to!
 interface ChatBoxProps {
   uploadId: string;
 }
 
 export default function ChatBox({ uploadId }: ChatBoxProps) {
   const { getToken } = useAuth();
-  
-  // The State Machines
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -69,7 +66,6 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
     }
   }
 
-  // 4. CSS Restraint: Clean Tailwind chat bubbles
   return (
     <div className="flex flex-col h-[500px] border border-gray-800 bg-gray-950 rounded-xl overflow-hidden shadow-lg mt-8">
       {/* Chat Header */}
