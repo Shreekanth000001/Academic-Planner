@@ -101,7 +101,6 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
         )}
       </div>
 
-      {/* Input Area */}
       <form onSubmit={handleSendMessage} className="p-3 bg-gray-900 border-t border-gray-800 flex gap-2">
         <input
           type="text"
