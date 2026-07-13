@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"; 
+import DeleteButton from "@/app/components/DeleteButton"
 
 export interface ScheduleProps{
   id:string;
@@ -35,9 +36,10 @@ export default function TaskCard({id,title,exam_date,is_active,created_at} : Sch
       <td className="px-6 py-4 text-sm text-gray-300">
         {formattedExamDate}
       </td>
-      <td className="px-6 py-4 text-right">
-          <Link className="font-medium text-indigo-400 hover:text-indigo-300 hover:underline transition-colors" href={`/view-task/${id}`}> View Tasks </Link>
+      <td className="pr-3 py-4 text-right">
+          <Link className="font-medium text-indigo-400 text-center hover:text-indigo-300 hover:underline transition-colors" href={`/view-task/${id}`}> View Tasks </Link>
       </td>
+<td><DeleteButton scheduleId={id} /></td>
     </tr>
   )
 }
