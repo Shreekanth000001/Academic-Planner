@@ -27,12 +27,12 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
     // 1. Optimistic UI Update: Show the user's message instantly
     const userMessage = input;
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
-    setInput(""); 
+    setInput("");
     setIsTyping(true);
 
     try {
       const token = await getToken();
-      
+
       // 2. The API Contract: Firing to your new FastAPI endpoint
       const response = await fetch("http://127.0.0.1:8000/chat", {
         method: "POST",
@@ -43,6 +43,7 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
         body: JSON.stringify({
           upload_id: uploadId,
           question: userMessage,
+          history: messages,
         }),
       });
 
@@ -54,11 +55,11 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
 
       // 3. Update UI with AI's response
       setMessages((prev) => [...prev, { role: "ai", content: data.answer }]);
-      
+
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev) => [
-        ...prev, 
+        ...prev,
         { role: "ai", content: "⚠️ Network error. Could not reach the AI worker." }
       ]);
     } finally {
@@ -67,7 +68,7 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
   }
 
   return (
-    <div className="flex flex-col h-[500px] border border-gray-800 bg-gray-950 rounded-xl overflow-hidden shadow-lg mt-8">
+    <div className="flex flex-col h-125 border border-gray-800 bg-gray-950 rounded-xl overflow-hidden shadow-lg mt-8">
       {/* Chat Header */}
       <div className="bg-gray-900 px-4 py-3 border-b border-gray-800">
         <h3 className="text-sm font-semibold text-gray-200">🤖 Syllabus Assistant (RAG)</h3>
@@ -80,12 +81,11 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
         ) : (
           messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div 
-                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm ${
-                  msg.role === "user" 
-                    ? "bg-indigo-600 text-white rounded-br-none" 
+              <div
+                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm ${msg.role === "user"
+                    ? "bg-indigo-600 text-white rounded-br-none"
                     : "bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700"
-                }`}
+                  }`}
               >
                 {msg.content}
               </div>
