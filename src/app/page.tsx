@@ -35,7 +35,7 @@ export default async function Home() {
   const schedules = await getSchedules();
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8">
 
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-800 pb-6">
@@ -71,6 +71,7 @@ export default async function Home() {
                     <th scope="col" className="px-6 py-3 font-semibold">Uploaded</th>
                     <th scope="col" className="px-6 py-3 font-semibold">Status</th>
                     <th scope="col" className="px-6 py-3 font-semibold">Exam Date</th>
+                    <th scope="col" className="px-6 py-3"></th>
                     <th scope="col" className="px-6 py-3"></th>
                   </tr>
                 </thead>
