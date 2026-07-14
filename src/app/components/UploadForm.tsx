@@ -13,6 +13,8 @@ export default function UploadForm() {
   const { getToken } = useAuth();
   const router = useRouter();
 
+  const [statusText, setStatusText] = useState<string>("Upload Syllabus");
+
   const [uploading, setUploading] = useState<boolean>(false);
 
    const [uploadIdToPoll, setUploadIdToPoll] = useState<string | null>(null);
@@ -50,7 +52,11 @@ export default function UploadForm() {
 
       const data: UploadResponse = await response.json();
       console.log("Ingestion successful:", data);
+      alert(data.message);
       setUploadIdToPoll(data.upload_id); 
+
+      setStatusText("AI is reading syllabus..."); 
+
     } catch (error) {
       console.error("Network fault:", error);
     } finally {
@@ -85,6 +91,7 @@ export default function UploadForm() {
           // Reset our UI state
           setUploadIdToPoll(null);
           setUploading(false);
+          setStatusText("Upload Syllabus"); 
           
           // Force the Server Component (page.tsx) to re-fetch the database!
           router.refresh(); 
@@ -107,24 +114,54 @@ export default function UploadForm() {
 
   }, [uploadIdToPoll, getToken, router]); // Dependency array: wake up when uploadIdToPoll changes
 
+  useEffect(() => {
+    async function checkActiveUpload() {
+      try {
+        const token = await getToken();
+        if (!token) return;
+
+        const res = await fetch("http://127.0.0.1:8000/upload/active", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        const data = await res.json();
+        if (data.has_active) {
+          console.log("Found active upload, resuming poll...");
+          setUploading(true);
+          setStatusText("Resuming AI process...");
+          setUploadIdToPoll(data.upload_id); // This instantly wakes up your polling useEffect!
+        }
+      } catch (e) {
+        console.error("Failed to check active uploads");
+      }
+    }
+    
+    checkActiveUpload();
+  }, [getToken]); // Only runs on mount
+
     return (
-      <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg max-w-sm">
-        {/* React 19 forms accept functions directly inside action attributes */}
-        <form action={handleFormAction} className="flex flex-col gap-3">
-          <input
-            type="file"
-            name="file"
-            accept="application/pdf"
-            className="text-slate-300 file:bg-slate-800 file:text-white file:border-0 file:rounded file:px-2 file:py-1 file:mr-2"
-          />
-          <button
-            type="submit"
-            disabled={uploading}
-            className="px-4 py-2 bg-indigo-600 rounded text-white disabled:bg-slate-700 transition"
-          >
-            {uploading ? "Ingesting System Config..." : "Upload Syllabus"}
-          </button>
-        </form>
+    // Removed max-w-sm, added w-full and responsive padding
+    <div className="p-5 md:p-6 bg-slate-900 border border-slate-800 rounded-xl w-full shadow-sm">
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold text-white">New Schedule</h3>
+        <p className="text-xs text-gray-400">Upload a PDF syllabus to extract tasks.</p>
       </div>
-    );
-  }
+      
+      <form action={handleFormAction} className="flex flex-col gap-4">
+        <input
+          type="file"
+          name="file"
+          accept="application/pdf"
+          className="block w-full text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/10 file:text-indigo-400 hover:file:bg-indigo-500/20 transition-colors"
+        />
+        <button
+          type="submit"
+          disabled={uploading}
+          className="w-full px-4 py-2.5 bg-indigo-600 rounded-md text-white font-medium disabled:bg-slate-800 disabled:text-slate-500 transition-colors"
+        >
+          {statusText}
+        </button>
+      </form>
+    </div>
+  );
+}
