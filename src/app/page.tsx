@@ -1,5 +1,6 @@
 import TaskCard, { ScheduleProps } from '@/app/components/TaskCard';
 import UploadForm from '@/app/components/UploadForm';
+import BuyCreditsButton from "@/app/components/BuyCredits"
 
 import { auth } from "@clerk/nextjs/server";
 
@@ -31,8 +32,27 @@ async function getSchedules(): Promise<ScheduleProps[]> {
   }
 }
 
+async function getUserProfile() {
+  try {
+    const { getToken } = await auth();
+    const token = await getToken();
+    if (!token) return null;
+
+    const res = await fetch("http://127.0.0.1:8000/users/me", {
+      cache: 'no-store',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+}
+
 export default async function Home() {
   const schedules = await getSchedules();
+  const userProfile = await getUserProfile();
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -44,6 +64,18 @@ export default async function Home() {
           <p className="text-gray-400 mt-2">Manage your study schedules and upload new course syllabi.</p>
         </div>
       </div>
+
+      <div className="flex items-center justify-end gap-4 bg-gray-900 p-3 rounded-xl border border-gray-800">
+          <BuyCreditsButton/>
+          <div className="flex flex-col items-center">
+            <span className="text-xs text-gray-500 uppercase tracking-wider font-bold">Available Credits</span>
+            <span className="text-xl font-mono font-bold text-indigo-400 text-center">
+              {userProfile?.credits_remaining ?? 0}
+            </span>
+          </div>
+        </div>
+
+      
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
