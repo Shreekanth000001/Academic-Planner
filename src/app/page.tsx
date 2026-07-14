@@ -77,10 +77,11 @@ export default async function Home() {
                 </thead>
                 <tbody className="divide-y divide-gray-800/50">
                   {schedules.length > 0 ? (
-                    schedules.map((schedule) => (
+                    schedules.map((schedule,index) => (
                       <TaskCard
                         key={schedule.id}
                         id={schedule.id}
+                        index={index+1}
                         title={schedule.title}
                         is_active={schedule.is_active}
                         exam_date={schedule.exam_date}
