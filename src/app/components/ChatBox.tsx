@@ -68,10 +68,11 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
   }
 
   return (
-    <div className="flex flex-col h-125 border border-gray-800 bg-gray-950 rounded-xl overflow-hidden shadow-lg mt-8">
+    // Fixed height bug: changed h-125 to responsive h-[500px] lg:h-[600px]
+    <div className="flex flex-col h-[500px] lg:h-[600px] border border-gray-800 bg-gray-950 rounded-xl overflow-hidden shadow-lg w-full">
       {/* Chat Header */}
       <div className="bg-gray-900 px-4 py-3 border-b border-gray-800">
-        <h3 className="text-sm font-semibold text-gray-200">🤖 Syllabus Assistant (RAG)</h3>
+        <h3 className="text-sm font-semibold text-gray-200">🤖 Syllabus Assistant</h3>
       </div>
 
       {/* Message History Area */}
@@ -82,7 +83,7 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
           messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm ${msg.role === "user"
+                className={`max-w-[85%] md:max-w-[75%] px-4 py-2 rounded-xl text-sm ${msg.role === "user"
                     ? "bg-indigo-600 text-white rounded-br-none"
                     : "bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700"
                   }`}
@@ -94,8 +95,8 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
         )}
         {isTyping && (
           <div className="flex justify-start">
-            <div className="bg-gray-800 text-gray-400 px-4 py-2 rounded-lg text-xs rounded-bl-none animate-pulse">
-              AI is searching syllabus...
+            <div className="bg-gray-800 text-gray-400 px-4 py-2 rounded-xl text-xs rounded-bl-none animate-pulse">
+              AI is thinking...
             </div>
           </div>
         )}
@@ -106,14 +107,14 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="e.g., When is the midterm?"
-          className="flex-1 bg-gray-950 border border-gray-700 text-gray-200 text-sm rounded-md px-3 py-2 focus:outline-none focus:border-indigo-500"
+          placeholder="Ask a question..."
+          className="flex-1 bg-gray-950 border border-gray-700 text-gray-200 text-sm rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500 transition-colors"
           disabled={isTyping}
         />
         <button
           type="submit"
           disabled={isTyping || !input.trim()}
-          className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50 transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
         >
           Send
         </button>
