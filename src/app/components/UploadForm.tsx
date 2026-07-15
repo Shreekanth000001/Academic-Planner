@@ -22,6 +22,13 @@ export default function UploadForm() {
   const handleFormAction = async (formData: FormData) => {
     const token = await getToken();
 
+     if (!token) {
+      alert("Please sign in to upload a syllabus.");
+      setUploading(false);
+      setStatusText("Upload Syllabus");
+      return;
+    }
+
     const file = formData.get("file") as File | null;
 
     if (!file || file.size === 0) {
@@ -45,8 +52,17 @@ export default function UploadForm() {
         },
       });
 
-      if (!response.ok) {
-        alert("Internal server processing error.");
+       if (response.status === 401) {
+        alert("Your session expired. Please log out and log back in.");
+        return;
+      }
+      
+      if (response.status === 402) {
+        alert("You are out of credits! Please buy more.");
+        return;
+      }
+      if(!response.ok) {
+        alert("Internal Server Processing Error.");
         return;
       }
 
