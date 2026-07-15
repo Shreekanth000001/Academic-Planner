@@ -28,7 +28,7 @@ async function get_tasks(schedule_id: string): Promise<ViewTaskResponse> {
      const { getToken } = await auth();
     const token = await getToken();
     
-    const response = await fetch(`http://localhost:8000/viewtask?schedule_id=${schedule_id}`, { 
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/viewtask?schedule_id=${schedule_id}`, { 
       cache: 'no-store' ,
       headers:{
         Authorization : `Bearer ${token}`

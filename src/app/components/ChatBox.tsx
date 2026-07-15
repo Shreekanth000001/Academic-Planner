@@ -34,7 +34,7 @@ export default function ChatBox({ uploadId }: ChatBoxProps) {
       const token = await getToken();
 
       // 2. The API Contract: Firing to your new FastAPI endpoint
-      const response = await fetch("http://127.0.0.1:8000/chat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

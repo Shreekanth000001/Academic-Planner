@@ -22,7 +22,7 @@ export default function DeleteButton({ scheduleId }: DeleteButtonProps) {
     try {
       const token = await getToken();
 
-      const response = await fetch(`http://localhost:8000/schedules/${scheduleId}`,{
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schedules/${scheduleId}`,{
         method:"DELETE",
         headers:{
             Authorization: `Bearer ${token}`

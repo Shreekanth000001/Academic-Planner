@@ -13,7 +13,7 @@ async function getSchedules(): Promise<ScheduleProps[]> {
       throw new Error("No token found. User is not authenticated.");
     }
 
-    const res = await fetch("http://localhost:8000/schedules", 
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schedules`, 
       { cache: 'no-store',
         headers:{
           Authorization : `Bearer ${token}`

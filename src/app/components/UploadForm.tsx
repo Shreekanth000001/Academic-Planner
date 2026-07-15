@@ -37,7 +37,7 @@ export default function UploadForm() {
     setUploading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/upload/syllabys", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/syllabys`, {
         method: "POST",
         body: formData,
         headers: {
@@ -75,7 +75,7 @@ export default function UploadForm() {
       try {
         const token = await getToken();
         // Hit the new FastAPI status endpoint we just built
-        const res = await fetch(`http://127.0.0.1:8000/upload/${uploadIdToPoll}/status`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/${uploadIdToPoll}/status`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
