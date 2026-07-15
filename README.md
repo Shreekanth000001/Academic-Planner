@@ -71,4 +71,9 @@ npm run dev
 
 The frontend application will now be available at `http://localhost:3000`. 
 
+### Screenshots
+
+<img width="1840" height="1007" alt="Screenshot from 2026-07-15 15-02-23" src="https://github.com/user-attachments/assets/3c6535f3-dcbf-48d7-a8d4-af9860adeb09" />
+<img width="1840" height="1007" alt="Screenshot from 2026-07-15 15-21-53" src="https://github.com/user-attachments/assets/73014232-f015-452e-8486-ae66003297a7" />
+
 > **⚠️ Note on Full-Stack Testing:** To test the full AI upload, conversational RAG, and retrieval pipeline locally, ensure your FastAPI backend (`uvicorn main:app`) and Redis worker (`arq worker.WorkerSettings`) are running simultaneously on port `8000`.
