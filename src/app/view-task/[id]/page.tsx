@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { auth } from "@clerk/nextjs/server";
 
 import ChatBox from "@/app/components/ChatBox"
@@ -105,7 +106,7 @@ return (
       </div>
 
       {/* Right Column: Sticky Chat Box */}
-      <div className="w-full lg:w-[400px] xl:w-[450px] shrink-0">
+      <div className="w-full lg:w-100 xl:w-112.5 shrink-0">
         <div className="sticky top-8">
           <ChatBox uploadId={upload_id}/>
         </div>

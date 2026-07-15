@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import TaskCard, { ScheduleProps } from '@/app/components/TaskCard';
 import UploadForm from '@/app/components/UploadForm';
 import BuyCreditsButton from "@/app/components/BuyCredits"
