@@ -39,7 +39,7 @@ async function getUserProfile() {
     const token = await getToken();
     if (!token) return null;
 
-    const res = await fetch("http://127.0.0.1:8000/users/me", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
       cache: 'no-store',
       headers: { Authorization: `Bearer ${token}` }
     });
