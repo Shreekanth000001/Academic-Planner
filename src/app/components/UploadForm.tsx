@@ -120,7 +120,7 @@ export default function UploadForm() {
         const token = await getToken();
         if (!token) return;
 
-        const res = await fetch("http://127.0.0.1:8000/upload/active", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/active`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
