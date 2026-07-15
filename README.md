@@ -1,6 +1,6 @@
 # Academic Planner - Web Client 🖥️
 
-> **Compute Engine:** The FastAPI backend, Redis queue, and AI worker for this system can be found [here](https://github.com/Shreekanth000001/Academic-Planner-backend).
+> **Compute Engine:** The FastAPI backend, Redis queue, and AI worker for this system can be found [here](https://github.com/Shreekanth000001/Academic-Planner-backend). Live [site](https://academic-planner-pdf.vercel.app/).
 
 This repository houses the presentation layer of the Academic Planner platform. Built with the Next.js App Router, it operates as a strictly decoupled, zero-trust client that interacts with the backend compute engine entirely via REST APIs. 
 
