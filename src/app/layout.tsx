@@ -1,6 +1,15 @@
 import { ClerkProvider, SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import type {Metadata} from 'next';
 import "./globals.css";
+
+export const metadata:Metadata = {
+  title:"Academic Planner",
+  description:"AI aided Academic Planner to help student map out schedules for thier specific syllabus.",
+  icons:{
+    icon:'/AcaPlan-Icon.png'
+  }
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
